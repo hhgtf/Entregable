@@ -1,4 +1,6 @@
-const listTask = [];
+let listTask = [];
+
+let taskId = 0;
 
 function saveTask(event) {
   event.preventDefault();  
@@ -7,82 +9,85 @@ function saveTask(event) {
   const formData = new FormData(form);  
   let task = {};
 
-
-  //Esto agrega la info del input al objeto task
-  //la key es el "name" en html
+  // Esto agrega la info del input al objeto task
   formData.forEach((valor, key) => (task[key] = valor));
+
+  // Asignar un identificador único a cada tarea
+  task.id = taskId++;
 
   listTask.push(task);
 
   form.reset();
 
   displayTask();
-  check()
-  
+  check();
 }
+
 
 
 function displayTask() {
- 
   let listTaskElement = document.querySelector(".lista-tarea");
 
   if (!listTaskElement) {
-    console.error("No se encontro el elemento ´.lista-tarea´");
+    console.error("No se encontró el elemento '.lista-tarea'");
     return;
   }
 
-  let listaTaskHtml = listTask.map((task, index) => {
-    let idUnique = index
-    
+  // Crear el HTML para cada tarea utilizando el id único
+  let listaTaskHtml = listTask.map((task) => {
     return `
-         
-            
-                <li class="taskPending"><input type="checkbox" id ="${idUnique}"class="checkbox" name="checkbox">
-                <label for="${idUnique}">${task.tareas}</label>
-                <button class="closeButton"></button>
-                </li> `;
+      <li class="taskPending" id="${task.id}">
+        <input type="checkbox" id="checkbox-${task.id}" class="checkbox" name="checkbox">
+        <label for="checkbox-${task.id}">${task.tareas}</label>
+        <button style="float: right;" class="closeButton">X</button>
+      </li>
+    `;
   });
 
-
-listTaskElement.innerHTML = listaTaskHtml.join("")
-
+  listTaskElement.innerHTML = listaTaskHtml.join("");
+  check();
+  deleteTask();
 }
+
 
 
 
 function check() {
-  // Selecciona todos los checkboxes con la clase 'checkbox'
   let checkboxes = document.querySelectorAll(".checkbox");
-
-  // Itera sobre cada checkbox y añade un event listener
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
-      // Encuentra el <li> contenedor del checkbox
       const li = checkbox.closest('li');
-
-      // Cambia el color del <li> si el checkbox está marcado
       if (checkbox.checked) {
         li.style.textDecoration = "line-through";
         li.style.color = "red"
       } else {
         li.style.textDecoration = "";
-        li.style.color = "" // Elimina el color para volver al estilo original
+        li.style.color = "" 
       }
     });
   });
 }
 
+function deleteTask() {
+  let buttonClose = document.querySelectorAll(".closeButton");
 
+  buttonClose.forEach(button => {
+    button.addEventListener('click', (event) => {
+      // Encuentra el elemento li más cercano al botón clicado
+      let li = event.target.closest('li');
+      let id = parseInt(li.getAttribute('id'), 10); // Convertir el id a número entero
+      
 
-/*function campoVacio(){
-  let button = document.querySelector("#button")
-  let input = document.querySelector("#tareas")
+      if (!isNaN(id)) {
+        // Filtrar la lista de tareas para eliminar la tarea con el id específico
+        alert("Seguro que desea borrar la tarea?")
+        listTask = listTask.filter(task => task.id !== id);
 
-  button.addEventListener('click',()=>{
-if(input.value.length == 0 ){
-  alert("Campo vacio")
+        // Volver a mostrar la lista de tareas actualizada
+        displayTask();
+      } else {
+        console.error(`ID de tarea no válido: ${id}`);
+      }
+    });
+  });
 }
-
-  })
-}
-  */

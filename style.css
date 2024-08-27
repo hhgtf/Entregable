@@ -63,7 +63,7 @@ form {
 }
 
 li {
-
+    
     color: white;
     font-size: 24px;
     border-style: dotted;
@@ -138,14 +138,25 @@ button {
     cursor:pointer;
     transition: 0.5s;
     transform: scale(110%);
+    background-color: rgb(177, 12, 177);
     padding: 10px;
     margin-left: 5px;
 
 }
 
-.taskPending{
-   display: flex;
-   justify-content: flex-start;
-   gap: 10px;
-   
+
+.closeButton {
+    cursor: pointer;
+    background-color: rgba(255, 0, 0, 0.342);
+    width: 40px;
+    height: 25px;
+    margin-top: 5px;
+    margin-right: 13px;
+    
+}
+
+.closeButton:hover {
+    background-color: rgba(255, 0, 0, 0.699);
+    transition: 0.5s;
+    transform: scale(110%);
 }
